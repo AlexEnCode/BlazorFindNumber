@@ -1,0 +1,86 @@
+﻿@page "/counter"
+@using System
+
+
+
+
+@if (!GameEnded)
+{
+	<div style="text-align: center; margin-top: 20px;">
+		<h1>Devinez le nombre!</h1>
+		<p style="color: red; font-size: 18px;">@coeur</p>
+		<input type="number" style="padding: 8px; font-size: 16px; border-radius: 5px; border: 2px solid;" @bind="Guess" min="1" max="20" />
+		<button style="padding: 8px 20px; font-size: 16px; border-radius: 5px; background-color: green; color: white; border: none; margin-left: 10px; cursor: pointer;" @onclick="CheckGuess">Vérifier</button>
+	</div>
+
+	@if (ErrorMessage != null)
+	{
+		<p>@ErrorMessage</p>
+	}
+}
+else
+{
+	<div style="text-align: center; margin-top: 20px;">
+	<p>Le nombre était @NumberToGuess.</p>
+	<button style="padding: 8px 20px; font-size: 16px; border-radius: 5px; background-color: green; color: white; border: none; margin-left: 10px; cursor: pointer;" onclick="window.location.href = '/counter';">Rejouer!</button>
+	</div>
+}
+
+
+
+
+@code {
+	private int NumberToGuess;
+	private int Guess;
+	private int AttemptsLeft = 5;
+	private bool GameEnded = false;
+	private string? ErrorMessage;
+	private string coeur = "❤❤❤❤❤";
+
+
+	private void GenerateNumberToGuess()
+	{
+		Random random = new Random();
+		NumberToGuess = random.Next(1, 21);
+	}
+
+
+	protected override void OnInitialized()
+	{
+		GenerateNumberToGuess();
+	}
+
+	private void CheckGuess()
+	{
+		coeur = coeur.Substring(0, coeur.Length - 1);
+		AttemptsLeft--;
+
+		if (Guess == NumberToGuess)
+		{
+			GameEnded = true;
+			return;
+		}
+
+		if (AttemptsLeft == 0)
+		{
+			GameEnded = true;
+			ErrorMessage = "Vous n'avez plus d'²essais!";
+			return;
+		}
+
+		if (Guess < 1 || Guess > 20)
+		{
+			ErrorMessage = "Veuillez entrer un nombre entre 1 et 20.";
+			return;
+		}
+
+		if (Guess < NumberToGuess)
+		{
+			ErrorMessage = "Le nombre à deviner est plus grand.";
+		}
+		else
+		{
+			ErrorMessage = "Le nombre à deviner est plus petit.";
+		}
+	}
+}
