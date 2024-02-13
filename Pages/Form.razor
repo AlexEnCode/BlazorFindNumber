@@ -1,0 +1,119 @@
+﻿@page "/Formulaire";
+@using BlazorFindNumber.Classes;
+
+
+<h1>Formulaire</h1>
+
+<div>
+	<EditForm Model="Formulaire" OnValidSubmit="HandleSubmit">
+		<DataAnnotationsValidator />
+		<div class="row">
+			<div class="col-md-3">
+
+
+				<div>
+					<label for="prenom" class="form-label">Prénom</label>
+					<InputText class="form-control" id="prenom" @bind-Value="Formulaire.Prenom" />
+					<small>
+						<ValidationMessage For="() => Formulaire.Prenom" />
+					</small>
+				</div>
+
+				<div>
+					<label for="nom" class="form-label">Nom</label>
+					<InputText class="form-control" id="nom" @bind-Value="Formulaire.Nom" />
+					<small>
+						<ValidationMessage For="() => Formulaire.Nom" />
+					</small>
+				</div>
+
+				<div>
+					<label for="email" class="form-label">Email</label>
+					<InputText class="form-control" id="email" @bind-Value="Formulaire.Email" />
+					<small>
+						<ValidationMessage For="() => Formulaire.Email" />
+					</small>
+				</div>
+				<br /><br /><br /><br /><br />
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</div>
+			<div class="col-md-3">
+				<div>
+					<label for="adresse" class="form-label">Adresse</label>
+					<InputText class="form-control" id="adresse" @bind-Value="Formulaire.Adresse" />
+					<small>
+						<ValidationMessage For="() => Formulaire.Adresse" />
+					</small>
+				</div>
+
+				<div>
+					<label for="codePostale" class="form-label">Code Postal</label>
+					<InputNumber class="form-control" id="codePostale" @bind-Value="Formulaire.CodePostale" />
+					<small>
+						<ValidationMessage For="() => Formulaire.CodePostale" />
+					</small>
+				</div>
+
+				<div>
+					<label for="dateDeNaissance" class="form-label">Date de Naissance</label>
+					<InputDate class="form-control" id="dateDeNaissance" @bind-Value="Formulaire.DateDeNaissance" />
+					<small>
+						<ValidationMessage For="() => Formulaire.DateDeNaissance" />
+					</small>
+				</div>
+
+				<div>
+					<label for="married" class="form-label">Marié(e)</label>
+
+					<label class="form-check-label" for="married"></label><input class="form-check-input" type="checkbox" id="married" @bind="Formulaire.Married" />
+
+					<small>
+						<ValidationMessage For="() => Formulaire.Married" />
+					</small>
+				</div>
+
+				<div>
+					<label for="fur" class="form-label">Couleur Préféré</label>
+					<InputSelect class="form-select" id="fur" @bind-Value="Formulaire.FavoriteColor">
+						@foreach (Color FavoriteColor in Enum.GetValues(typeof(Color)))
+						{
+							<option value="@FavoriteColor">@(FavoriteColor != Color.Nothing ? FavoriteColor : "Selectionner une couleur")</option>
+						}
+					</InputSelect>
+				</div>
+				<div>
+					<small>
+						<ValidationMessage For="() => Formulaire.FavoriteColor" />
+					</small>
+				</div>
+
+			</div>
+			<div class="col-md-3">
+			</div>
+			<div class="col-md-3">
+				
+				<div class="card" style="width: 18rem;">
+					<div class="card-body">
+						<h5 class="card-title">@Formulaire.Prenom @Formulaire.Nom</h5>
+						<h6 class="card-subtitle mb-2 text-muted">@Formulaire.Adresse @Formulaire.CodePostale</h6>
+						<p class="card-text">Couleur Préférée: @Formulaire.FavoriteColor</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<ValidationSummary />
+
+	</EditForm>
+</div>
+
+@code {
+	public Formulaire Formulaire { get; set; } = new Formulaire();
+
+	public void HandleSubmit()
+	{
+		Console.WriteLine(Formulaire);
+	}
+
+}
