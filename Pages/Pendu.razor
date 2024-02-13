@@ -1,0 +1,74 @@
+﻿@page "/pendu"
+
+@using BlazorFindNumber.Classes
+
+
+
+@if (!GameWon && !GameLost)
+{
+    <div style="text-align: center; margin-top: 20px;">
+        <h1>Jeu du Pendu</h1>
+        <p style="color: red; font-size: 18px;">@CoeurRestant</p>
+        <p>Lettres testées: @string.Join(", ", UnPendu.LettresTestees)</p>
+        <p>Tentatives: (@UnPendu.NbTentatives/@UnPendu.NbVies)</p>
+        <p>Mot à trouver: @UnPendu.Masque</p>
+        <p>Veuillez entrer une lettre: <input type="text" style="padding: 8px; font-size: 16px; width: 2em; border-radius: 5px; border: 2px solid;" @bind="Lettre" @bind:event="oninput" /></p>
+        <button style="padding: 8px 20px; font-size: 16px; border-radius: 5px; background-color: green; color: white; border: none; margin-left: 10px; cursor: pointer;" @onclick="Click">Tester</button>
+    </div>
+}
+
+@if (GameWon)
+{
+    <p>Bravo, vous avez trouvé le mot !</p>
+}
+
+@if (GameLost)
+{
+    <p>Vous avez perdu ! Le mot était: @UnPendu.MotATrouver</p>
+}
+
+@code {
+    LePendu UnPendu = new LePendu();
+    string? Lettre { get; set; }
+    bool GameWon { get; set; }
+    bool GameLost { get; set; }
+
+    string CoeurRestant = "❤❤❤❤❤❤❤❤❤❤";
+
+    void Click()
+    {
+        TesterLettre();
+        DesCeurs();
+    }
+
+    void DesCeurs()
+    {
+        if (UnPendu.NbTentatives != UnPendu.NbVies)
+        {
+            CoeurRestant = CoeurRestant.Substring(0, (UnPendu.NbTentatives - UnPendu.NbVies));
+        }
+    }
+   
+
+      void TesterLettre()
+    {
+        if (!string.IsNullOrEmpty(Lettre))
+        {
+            char lettre = Lettre.ToUpper()[0];
+            UnPendu.TestChar(lettre);
+
+            if (UnPendu.TestWin() == 1)
+            {
+                GameWon = true;
+            }
+            else if (UnPendu.TestWin() == -1)
+            {
+                CoeurRestant = CoeurRestant.Substring(0, CoeurRestant.Length - 1);
+                GameLost = true;
+
+            }
+
+            Lettre = string.Empty;
+        }
+    }
+}
